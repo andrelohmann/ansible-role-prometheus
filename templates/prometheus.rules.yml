@@ -1,0 +1,13 @@
+{% if prometheus_rules.groups|length > 0 %}
+groups:
+{% for group in prometheus_rules.groups %}
+- name: {{ group.name }}
+  rules:
+{% for rule in group.rules %}
+  - record: {{ rule.record }}
+    expr: {{ rule.expr }}
+{% endfor %}
+{% endfor %}
+{% else %}
+groups: []
+{% endif %}

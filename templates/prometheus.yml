@@ -1,0 +1,34 @@
+# This File is managed by ansible
+global:
+  scrape_interval: {{ prometheus_config.global.scrape_interval }} # By default, scrape targets every 15 seconds.
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+    monitor: '{{ prometheus_config.external_labels.monitor }}'
+
+rule_files:
+- 'prometheus.rules.yml'
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+# The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+{% for config in prometheus_config.scrape_configs %}
+- job_name: '{{ config.job_name }}'
+  # Override the global default and scrape targets from this job every 5 seconds.
+  scrape_interval: {{ config.scrape_interval }}
+  static_configs:
+{% for static_config in config.static_configs %}
+  - targets:
+{% for target in static_config.targets %}
+    - '{{ target }}'
+{% endfor %}
+{% if static_config.labels is defined %}
+    labels:
+{% if static_config.labels.group is defined %}
+      group: '{{ static_config.labels.group }}'
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endfor %}
