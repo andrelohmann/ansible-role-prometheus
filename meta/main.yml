@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: andrelohmann.prometheus
+  role_name: prometheus
   author: andrelohmann
   description: install prometheus
   company: smartformer
