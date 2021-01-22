@@ -14,6 +14,7 @@ Role Variables
       scrape_configs:
       - job_name: prometheus
         scrape_interval: 5s
+        scrape_timeout: 5s
         static_configs:
         - targets:
           - 'localhost:9090'
